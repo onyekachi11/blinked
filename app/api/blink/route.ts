@@ -95,188 +95,84 @@ const allBlinks: Blink[] = [
       title: "Solana CrowdFunder3",
       links: {
         actions: [
-          // {
-          //   label: "Create New Campaign",
-          //   href: `/api/action?title={title}&description={description}&fund_goal={fund_goal}`,
-
-          //   parameters: [
-          //     {
-          //       name: "title",
-          //       label: "Enter title",
-          //       required: true,
-          //     },
-          //     {
-          //       name: "description",
-          //       label: "Enter description",
-          //       required: true,
-          //     },
-          //     {
-          //       name: "fund_goal",
-          //       label: "Enter funding goal",
-          //       required: true,
-          //       type: "number",
-          //       pattern: "^\\d+(\\.\\d{0,2})?$",
-          //     },
-          //   ],
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          //   parameters: [
-          //     {
-          //       type: "select",
-          //       name: "title",
-          //       label: "Enter title",
-          //       required: true,
-          //       options: [
-          //         {
-          //           label: "hello",
-          //           value: "hello",
-          //         },
-          //         {
-          //           label: "hello",
-          //           value: "hello",
-          //         },
-          //         {
-          //           label: "hello",
-          //           value: "hello",
-          //         },
-          //       ],
-          //     },
-          //   ],
-          // },
           {
             label: "Fund 0.1 SOL",
             href: `/api/action?campaign_id=&fund_amount=0.1`,
             parameters: [
               {
-                name: "title",
+                name: "title1",
                 label: "Enter title",
-                required: true,
+                type: "text",
+                // type: "checkbox",
+                // options: [{ label: "", value: "", selected: false }],
               },
               {
-                name: "title",
+                name: "title2",
                 label: "Enter title",
-                required: true,
+                type: "email",
+                max: 1,
               },
-            ],
-          },
-          {
-            label: "Fund 1 SOL",
-            href: `/api/action?campaign_id=}&fund_amount=1`,
-          },
-
-          {
-            label: "Fund 0.12 SOL",
-            href: `/api/action?campaign_id=&fund_amount=0.1`,
-            parameters: [
               {
-                name: "title",
+                name: "title3",
                 label: "Enter title",
-                required: true,
+                type: "checkbox",
+                options: [{ label: "", value: "", selected: false }],
               },
-              // {
-              //   name: "title",
-              //   label: "Enter title",
-              //   required: true,
-              // },
-            ],
-          },
-          {
-            label: "Fund 0.1 SOL",
-            href: `/api/action?campaign_id=&fund_amount=0.1`,
-            parameters: [
               {
-                type: "select",
-                name: "title",
+                name: "title4",
                 label: "Enter title",
-                required: true,
+                type: "radio",
                 options: [
-                  {
-                    label: "hr=ellp",
-                    value: "hello",
-                  },
+                  { label: "", value: "" },
+                  { label: "", value: "" },
                 ],
               },
-            ],
-          },
-          {
-            label: "Fund 0.1 SOL",
-            href: `/api/action?campaign_id=&fund_amount=0.1`,
-            parameters: [
               {
-                name: "title",
+                name: "title5",
                 label: "Enter title",
-                required: true,
+                type: "date",
               },
-            ],
-          },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          //   parameters: [
-          //     {
-          //       name: "title",
-          //       label: "Enter title",
-          //       required: true,
-          //     },
-          //   ],
-          // },
-          {
-            label: "Fund 0.1 SOL",
-            href: `/api/action?campaign_id=&fund_amount=0.1`,
-            parameters: [
               {
+                name: "title6",
+                label: "Enter title",
+                type: "datetime-local",
+              },
+              {
+                name: "title7",
+                label: "Enter title",
+                type: "number",
+              },
+              {
+                name: "title8",
+                label: "Enter title",
                 type: "select",
-                name: "title",
+                options: [{ label: "", value: "", selected: false }],
+              },
+              {
+                name: "title9",
                 label: "Enter title",
-                required: true,
-                options: [
-                  {
-                    label: "hr=ellp",
-                    value: "hello",
-                  },
-                ],
+                type: "textarea",
+              },
+              {
+                name: "title10",
+                label: "Enter title",
+                type: "url",
               },
             ],
           },
-
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
-          // {
-          //   label: "Fund 0.1 SOL",
-          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-          // },
+          {
+            label: "Fund 0.1 SOL",
+            href: `/api/action?campaign_id=&fund_amount=0.1`,
+            parameters: [
+              {
+                name: "title1",
+                label: "Enter title",
+                type: "text",
+                // type: "checkbox",
+                // options: [{ label: "", value: "", selected: false }],
+              },
+            ],
+          },
           {
             label: "Fund 11 SOL",
             href: `/api/action?campaign_id=&fund_amount=0.1`,

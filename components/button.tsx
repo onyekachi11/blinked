@@ -9,7 +9,7 @@ interface Button {
 const Button = ({ onClick, value, type }: Button) => {
   return (
     <button
-      className="border px-5 py-2 rounded-lg bg-purple-400"
+      className="border px-5 py-2 rounded-md text-white bg-[#2a2a2b]"
       onClick={() => onClick?.()}
       type={type}
     >
