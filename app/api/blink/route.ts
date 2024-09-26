@@ -114,13 +114,13 @@ const allBlinks: Blink[] = [
               },
               {
                 name: "title3",
-                label: "Enter title",
+                label: "Enter title check",
                 type: "checkbox",
                 options: [{ label: "", value: "", selected: false }],
               },
               {
                 name: "title4",
-                label: "Enter title",
+                label: "Enter title radio",
                 type: "radio",
                 options: [
                   { label: "", value: "" },
@@ -160,19 +160,23 @@ const allBlinks: Blink[] = [
               },
             ],
           },
-          {
-            label: "Fund 0.1 SOL",
-            href: `/api/action?campaign_id=&fund_amount=0.1`,
-            parameters: [
-              {
-                name: "title1",
-                label: "Enter title",
-                type: "text",
-                // type: "checkbox",
-                // options: [{ label: "", value: "", selected: false }],
-              },
-            ],
-          },
+          // {
+          //   label: "Fund 0.1 SOL",
+          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
+          //   parameters: [
+          //     {
+          //       name: "title1",
+          //       label: "Enter title",
+          //       type: "radio",
+          //       // type: "checkbox",
+          //       options: [
+          //         { label: "hdhjnsdj", value: "", selected: false },
+          //         { label: "jndjnd", value: "", selected: false },
+          //         { label: "jndjnsdj", value: "", selected: false },
+          //       ],
+          //     },
+          //   ],
+          // },
           {
             label: "Fund 11 SOL",
             href: `/api/action?campaign_id=&fund_amount=0.1`,

@@ -7,6 +7,7 @@ import React from "react";
 interface Blink {
   values: InitialBlinkValues;
   newValue: ActionGetResponse;
+  // inputParameterOption: ActionParameterType;
 }
 const BlinkPreview = ({ values, newValue }: Blink) => {
   const displayOnlyButton = () => {
@@ -64,20 +65,86 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
     // If found an action with parameters.length > 1, return it
     if (actionsWithParamsmorethan1.length > 0) {
       return actionsWithParamsmorethan1.map((action, index) => (
-        <div key={index} className="w-full flex flex-col gap-3 ">
-          <div className="flex flex-col gap-3">
-            {action?.parameters?.slice(0, 10).map((input, index) => (
-              <Field
-                key={index}
-                type="text"
-                name="todo"
-                placeholder={`${input.label}*`}
-                required
-                className="outline-none px-4 py-[10px] font-medium text-[16px] border border-[#C1C1C1] rounded-md"
-              />
+        <div key={index} className="w-full flex flex-col gap-3">
+          <div className="flex flex-col gap-3 ">
+            {action?.parameters?.slice(0, 10).map((input, idx) => (
+              <div key={idx}>
+                {/* Conditional logic for different input types */}
+                {input?.type !== "select" &&
+                input?.type !== "radio" &&
+                input?.type !== "checkbox" ? (
+                  <Field
+                    as={input?.type === "textarea" ? "textarea" : "input"}
+                    type={input?.type === "textarea" ? undefined : "text"}
+                    name={`${input?.label}${input?.name}*`}
+                    placeholder={`${input?.label}*`}
+                    required
+                    className="outline-none px-4 py-[10px] font-medium text-[16px] border border-[#C1C1C1] rounded-md w-full"
+                  />
+                ) : null}
+
+                {/* Select Field */}
+                {input?.type === "select" && "options" in input && (
+                  <Field
+                    as="select"
+                    name={`${input?.label}${input?.name}*`}
+                    required
+                    className="outline-none px-4 py-[10px] font-medium text-[16px] border border-[#C1C1C1] rounded-md w-full"
+                  >
+                    {input?.options.map((option, optIndex) => (
+                      <option key={optIndex} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Field>
+                )}
+
+                {/* Radio Field */}
+                {input?.type === "radio" && "options" in input && (
+                  <div className="flex gap-3 flex-col">
+                    <p className="text-[18px] font-medium">{input?.label}</p>
+                    {input?.options.map((option, optIndex) => (
+                      <label key={optIndex} className="flex items-center gap-2">
+                        <Field
+                          type="radio"
+                          name={`${optIndex}`}
+                          value={option.value}
+                          required
+                          className="outline-none"
+                        />
+                        {option.label}
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {/* Checkbox Field */}
+                {input?.type === "checkbox" && "options" in input && (
+                  <div className="flex gap-3 flex-col">
+                    <p className="text-[18px] font-medium">{input?.label}</p>
+                    {input?.options.map((option, optIndex) => (
+                      <label key={optIndex} className="flex items-center gap-2">
+                        <Field
+                          type="checkbox"
+                          name={`${optIndex}`}
+                          value={option.value}
+                          required
+                          className="outline-none"
+                        />
+                        {option.label}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
-          <button className="bg-[#2a2a2b] w-full p-3 text-white rounded-lg font-semibold">
+
+          {/* Action button */}
+          <button
+            type="button"
+            className="bg-[#2a2a2b] w-full p-3 text-white rounded-lg font-semibold"
+          >
             {action.label}
           </button>
         </div>
@@ -87,19 +154,82 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
     // Otherwise, return the first 3 actions with parameters.length <= 1
     return actionsWithParamslessthan1.map((action, index) => (
       <div key={index}>
-        {action?.parameters?.slice(0, 3).map((input, index) => (
+        {action?.parameters?.slice(0, 3).map((input, idx) => (
           <div
-            key={index}
-            className="border border-[#C1C1C1] flex justify-between items-center gap-2 p-1 rounded-lg mt-3 "
+            key={idx}
+            className="border border-[#C1C1C1] flex justify-between items-center gap-2 p-1 rounded-lg mt-3"
           >
-            <Field
-              type="text"
-              name="todo"
-              placeholder={`${input.label}*`}
-              required
-              className="outline-none px-2 py-2 font-medium text-[16px] w-[70%]"
-            />
-            <button className="bg-[#2a2a2b] w-[30%] p-3 text-white rounded-lg font-semibold">
+            {/* Text Field for inputs other than select, radio, checkbox */}
+            {input?.type !== "select" &&
+              input?.type !== "radio" &&
+              input?.type !== "checkbox" && (
+                <Field
+                  as={input?.type === "textarea" ? "textarea" : "input"}
+                  type={input?.type === "textarea" ? undefined : "text"}
+                  name={`${index}`}
+                  placeholder={`${input?.label}*`}
+                  required
+                  className="outline-none px-2 py-2 font-medium text-[16px] w-[70%] border"
+                />
+              )}
+
+            {/* Select Field */}
+            {input?.type === "select" && "options" in input && (
+              <Field
+                as="select"
+                name="todo"
+                required
+                className="outline-none px-2 py-2 font-medium text-[16px] w-[70%] border"
+              >
+                {input?.options.map((option, optIndex) => (
+                  <option key={optIndex} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Field>
+            )}
+
+            {/* Radio Field */}
+            {input?.type === "radio" && "options" in input && (
+              <div className="w-[70%]">
+                {input?.options.map((option, optIndex) => (
+                  <label key={optIndex} className="flex items-center gap-2">
+                    <Field
+                      type="radio"
+                      name="todo"
+                      value={option.value}
+                      required
+                      className="outline-none"
+                    />
+                    {option.label}
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {/* Checkbox Field */}
+            {input?.type === "checkbox" && "options" in input && (
+              <div className="w-[70%]">
+                {input?.options.map((option, optIndex) => (
+                  <label key={optIndex} className="flex items-center gap-2">
+                    <Field
+                      type="checkbox"
+                      name="todo"
+                      value={option.value}
+                      required
+                      className="outline-none"
+                    />
+                    {option.label}
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {/* Action Button */}
+            <button
+              type="button"
+              className="bg-[#2a2a2b] w-[30%] p-3 text-white rounded-lg font-semibold"
+            >
               {action.label}
             </button>
           </div>

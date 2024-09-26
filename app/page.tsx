@@ -16,16 +16,112 @@ export interface InitialBlinkValues {
   buttonAction: string;
   inputName: string;
   inputPlaceholder: string;
+  optionLabel: string;
+  optionValue: string;
 }
 
 export default function Home() {
+  // const [inputParameterOption, setInputParameterOption] =
+  //   useState<ActionParameterType>("text");
   const [newValue, setNewValue] = useState<ActionGetResponse>({
     title: "",
     description: "",
     icon: "https://res.cloudinary.com/dukepqryi/image/upload/v1726437261/crowdfunder.jpg",
     label: "",
     links: {
-      actions: [] as LinkedAction[],
+      // actions: [
+
+      // ] as LinkedAction[],
+      actions: [
+        // {
+        //   label: "Fund 0.1 SOL",
+        //   href: `/api/action?campaign_id=&fund_amount=0.1`,
+        //   parameters: [
+        //     {
+        //       name: "title1",
+        //       label: "Enter title",
+        //       type: "text",
+        //       // type: "checkbox",
+        //       // options: [{ label: "", value: "", selected: false }],
+        //     },
+        //     {
+        //       name: "title2",
+        //       label: "Enter title",
+        //       type: "email",
+        //       max: 1,
+        //     },
+        //     {
+        //       name: "title3",
+        //       label: "Enter title",
+        //       type: "checkbox",
+        //       options: [
+        //         { label: "Option 1", value: "option1", selected: false },
+        //         { label: "Option 2", value: "option2", selected: false },
+        //       ],
+        //     },
+        //     {
+        //       name: "title4",
+        //       label: "Enter title",
+        //       type: "radio",
+        //       options: [
+        //         { label: "Option 1", value: "option1", selected: false },
+        //         { label: "Option 2", value: "option2", selected: false },
+        //       ],
+        //     },
+        //     {
+        //       name: "title5",
+        //       label: "Enter title",
+        //       type: "date",
+        //     },
+        //     {
+        //       name: "title6",
+        //       label: "Enter title",
+        //       type: "datetime-local",
+        //     },
+        //     {
+        //       name: "title7",
+        //       label: "Enter title",
+        //       type: "number",
+        //     },
+        //     {
+        //       name: "title8",
+        //       label: "Enter title",
+        //       type: "select",
+        //       options: [
+        //         { label: "Option 1", value: "option1", selected: false },
+        //         { label: "Option 2", value: "option2", selected: false },
+        //       ],
+        //     },
+        //     {
+        //       name: "title9",
+        //       label: "Enter title",
+        //       type: "textarea",
+        //     },
+        //     {
+        //       name: "title10",
+        //       label: "Enter title",
+        //       type: "url",
+        //     },
+        //   ],
+        // },
+        // {
+        //   label: "Fund 0.1 SOL",
+        //   href: `/api/action?campaign_id=&fund_amount=0.1`,
+        //   parameters: [
+        //     {
+        //       name: "title1",
+        //       label: "Enter title",
+        //       type: "textarea",
+        // options: [
+        //   { label: "Option 1", value: "option1", selected: false },
+        //   { label: "Option 2", value: "option2", selected: false },
+        // ],
+        //       // type: "checkbox",
+        //       // options: [{ label: "", value: "", selected: false }],
+        //     },
+        //   ],
+        // },
+      ] as LinkedAction[],
     },
   });
 
@@ -39,6 +135,8 @@ export default function Home() {
     buttonAction: "",
     inputName: "",
     inputPlaceholder: "",
+    optionLabel: "",
+    optionValue: "",
   };
 
   // const handlePost = async (values: ActionGetResponse) => {
@@ -78,9 +176,14 @@ export default function Home() {
                   newValue={newValue}
                   setNewValue={setNewValue}
                   setFieldValue={setFieldValue}
+                  // setInputParameterOption={setInputParameterOption}
                 />
                 {/* </div> */}
-                <BlinkPreview values={values} newValue={newValue} />
+                <BlinkPreview
+                  values={values}
+                  newValue={newValue}
+                  // inputParameterOption={inputParameterOption}
+                />
               </div>
               {/* 
               <Button

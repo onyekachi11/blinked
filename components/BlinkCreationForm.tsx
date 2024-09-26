@@ -7,13 +7,11 @@ import MultiInputUi from "./actionUI/MutipleInputUi";
 import { InitialBlinkValues } from "@/app/page";
 
 interface BlinkCreationForm {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: InitialBlinkValues;
   newValue: ActionGetResponse;
   setNewValue: React.Dispatch<React.SetStateAction<ActionGetResponse>>;
   setFieldValue: (
     field: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: string,
     shouldValidate?: boolean
   ) => Promise<void | FormikErrors<InitialBlinkValues>>;
@@ -25,7 +23,7 @@ const BlinkCreationForm = ({
   setNewValue,
   setFieldValue,
 }: BlinkCreationForm) => {
-  const [optionValue, setOptionValue] = useState("input");
+  const [optionValue, setOptionValue] = useState("button");
 
   const resetActionDetails = async () => {
     await setFieldValue("buttonAction", "");
@@ -78,11 +76,11 @@ const BlinkCreationForm = ({
             setOptionValue(e.target.value);
             resetActionDetails();
           }}
-          defaultValue={"input"}
+          defaultValue={"button"}
         >
-          <option value="input">Input</option>
-          <option value="input_button">Input Action</option>
           <option value="button">Button</option>
+          <option value="input_button">Input Action</option>
+          <option value="input">Input</option>
         </select>
       </div>
       {optionValue === "input" && (
@@ -103,6 +101,7 @@ const BlinkCreationForm = ({
           values={values}
           setNewValue={setNewValue}
           newValue={newValue}
+          setFieldValue={setFieldValue}
         />
       )}
     </div>
