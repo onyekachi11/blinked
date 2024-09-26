@@ -1,5 +1,5 @@
 "use client";
-import { Field, FormikErrors } from "formik";
+import { ErrorMessage, Field, FormikErrors } from "formik";
 import React, { useState } from "react";
 import Button from "../button";
 import {
@@ -9,6 +9,8 @@ import {
 } from "@solana/actions";
 import { InitialBlinkValues } from "@/app/page";
 import { TypedActionParameter } from "./MutipleInputUi";
+import ErrorMessageUI from "../ErrorMessageUI";
+import toast from "react-hot-toast";
 
 interface InputButtons {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,6 +38,15 @@ const InputButton = ({
     parameters: [] as Array<TypedActionParameter>,
   } as LinkedAction);
 
+  const {
+    optionLabel,
+    optionValue,
+    buttonAction,
+    buttonLabel,
+    inputName,
+    inputPlaceholder,
+  } = values;
+
   const addInputButtonAction = (
     buttonLabel: string,
     buttonAction: string,
@@ -54,17 +65,18 @@ const InputButton = ({
           label: inputPlaceholder,
           required: true,
           type: inputParameterOption,
-          options:
-            inputParameterOption === "checkbox" ||
-            inputParameterOption === "radio" ||
-            inputParameterOption === "select"
-              ? [
+          ...(inputParameterOption === "checkbox" ||
+          inputParameterOption === "radio" ||
+          inputParameterOption === "select"
+            ? {
+                options: [
                   {
                     label: optionLabel,
                     value: optionValue,
                   },
-                ]
-              : undefined,
+                ],
+              }
+            : {}),
         },
       ] as Array<TypedActionParameter>,
     } as LinkedAction;
@@ -77,6 +89,8 @@ const InputButton = ({
     }));
 
     setInputValue(value);
+
+    resetOptionDetails();
   };
 
   const addNewOption = (optionLabel: string, optionValue: string) => {
@@ -184,7 +198,7 @@ const InputButton = ({
     }));
 
     // Uncomment to reset option details if needed
-    // resetOptionDetails();
+    resetOptionDetails();
   };
 
   const resetInputDetails = async () => {
@@ -196,6 +210,30 @@ const InputButton = ({
     await setFieldValue("optionValue", "");
     await setFieldValue("optionLabel", "");
   };
+  const resetActionLabelDetails = async () => {
+    await setFieldValue("buttonAction", "");
+    await setFieldValue("buttonLabel", "");
+  };
+
+  const lastValues = newValue.links?.actions
+    .map((action) => {
+      if (action.parameters && action.parameters.length > 0) {
+        // Find the last parameter that matches the required type
+        const lastParam = action.parameters[action.parameters.length - 1];
+        if (
+          lastParam &&
+          (lastParam.type === "checkbox" ||
+            lastParam.type === "radio" ||
+            lastParam.type === "select")
+        ) {
+          return lastParam; // Return the last parameter object if it's of the correct type
+        }
+      }
+      return null; // Return null if no matching parameter exists
+    })
+    .filter((param) => param !== null); // Remove null values
+
+  // console.log(lastValues);
 
   return (
     <div
@@ -221,6 +259,7 @@ const InputButton = ({
             placeholder="Enter button label"
             className="outline-none border rounded-lg px-5 py-3 "
           />
+          <ErrorMessage name="buttonLabel" component={ErrorMessageUI} />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="">Button Action</label>
@@ -230,6 +269,7 @@ const InputButton = ({
             placeholder="Enter button label"
             className="outline-none border rounded-lg px-5 py-3 "
           />
+          <ErrorMessage name="buttonAction" component={ErrorMessageUI} />
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
@@ -240,6 +280,7 @@ const InputButton = ({
                 setInputParameterOption(e.target.value as ActionParameterType);
                 resetInputDetails();
                 resetOptionDetails();
+                resetActionLabelDetails();
               }}
               defaultValue={"text"}
             >
@@ -247,7 +288,7 @@ const InputButton = ({
               <option value="email">Email</option>
               <option value="checkbox">Checkbox</option>
               <option value="radio">Radio</option>
-              <option value="date">Button</option>
+              <option value="date">Date</option>
               <option value="datetime-local">Datetime-local</option>
               <option value="number">Number</option>
               <option value="select">Select</option>
@@ -256,23 +297,29 @@ const InputButton = ({
             </select>
             {/* <Button value="Add new input" type="button" /> */}
           </div>
-          <div className="flex flex-row gap-2 items-center">
-            <label htmlFor="">Input name</label>
-            <Field
-              type="text"
-              name="inputName"
-              placeholder="Enter name value"
-              className="outline-none border rounded-md px-3 py-2 "
-            />
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2 items-center justify-between">
+              <label htmlFor="">Input name</label>
+              <Field
+                type="text"
+                name="inputName"
+                placeholder="Enter name value"
+                className="outline-none border rounded-md px-3 py-2 w-[70%] "
+              />
+            </div>
+            <ErrorMessage name="inputName" component={ErrorMessageUI} />
           </div>
-          <div className="flex flex-row gap-2 items-center">
-            <label htmlFor="">Input Placeholder</label>
-            <Field
-              type="text"
-              name="inputPlaceholder"
-              placeholder="Enter placeholder value"
-              className="outline-none border rounded-md px-3 py-2  "
-            />
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2 items-center justify-between">
+              <label htmlFor="">Input Placeholder</label>
+              <Field
+                type="text"
+                name="inputPlaceholder"
+                placeholder="Enter placeholder value"
+                className="outline-none border rounded-md px-3 py-2 w-[70%]  "
+              />
+            </div>
+            <ErrorMessage name="inputPlaceholder" component={ErrorMessageUI} />
           </div>
           {inputParameterOption == "select" ||
           inputParameterOption == "radio" ||
@@ -282,31 +329,40 @@ const InputButton = ({
                 <p className="font-medium text-[20px] capitalize">
                   {inputParameterOption} Options
                 </p>
-                <Button
-                  value={`Add new ${inputParameterOption} option`}
-                  type="button"
-                  onClick={() =>
-                    addNewOption(values.optionLabel, values.optionValue)
-                  }
-                />
+                {lastValues && lastValues?.length > 0 && (
+                  <Button
+                    value={`Add new ${inputParameterOption} option`}
+                    type="button"
+                    disabled={optionLabel === "" || optionValue === ""}
+                    onClick={() =>
+                      addNewOption(values.optionLabel, values.optionValue)
+                    }
+                  />
+                )}
               </div>
-              <div className="flex flex-row gap-2 items-center">
-                <label htmlFor="">Label</label>
-                <Field
-                  type="text"
-                  name="optionLabel"
-                  placeholder={`Enter ${inputParameterOption} label"`}
-                  className="outline-none border rounded-md px-3 py-2  "
-                />
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2 items-center justify-between capitalize">
+                  <label htmlFor="">Label</label>
+                  <Field
+                    type="text"
+                    name="optionLabel"
+                    placeholder={`Enter ${inputParameterOption} label"`}
+                    className="outline-none border rounded-md px-3 py-2 w-[70%]  "
+                  />
+                </div>
+                <ErrorMessage name="optionLabel" component={ErrorMessageUI} />
               </div>
-              <div className="flex flex-row gap-2 items-center">
-                <label htmlFor="">Value</label>
-                <Field
-                  type="text"
-                  name="optionValue"
-                  placeholder={`Enter ${inputParameterOption} value"`}
-                  className="outline-none border rounded-md px-3 py-2  "
-                />
+              <div className="flex flex-col gap-2 ">
+                <div className="flex gap-2 items-center justify-between capitalize">
+                  <label htmlFor="">{inputParameterOption} Value</label>
+                  <Field
+                    type="text"
+                    name="optionValue"
+                    placeholder={`Enter ${inputParameterOption} value"`}
+                    className="outline-none border rounded-md px-3 py-2  w-[70%] "
+                  />
+                </div>
+                <ErrorMessage name="optionValue" component={ErrorMessageUI} />
               </div>
               {/* <div className="flex flex-row gap-2 items-center">
                 <label htmlFor="">Label</label>
@@ -322,18 +378,44 @@ const InputButton = ({
         </div>
 
         <Button
-          value="Add"
-          type="button"
-          onClick={() =>
-            addInputButtonAction(
-              values.buttonLabel,
-              values.buttonAction,
-              values.inputName,
-              values.inputPlaceholder,
-              values.optionLabel,
-              values.optionValue
-            )
+          value={
+            inputValue.parameters && inputValue?.parameters.length > 0
+              ? `Add new ${inputParameterOption} input`
+              : `Add `
           }
+          type="button"
+          disabled={
+            (lastValues && lastValues[0]?.name === values.inputName) ||
+            (lastValues && lastValues[0]?.label === values.inputPlaceholder)
+            // newValue.links?.actions.length == 3
+          }
+          onClick={() => {
+            const isCommonFieldsValid =
+              buttonLabel !== "" &&
+              buttonAction !== "" &&
+              inputName !== "" &&
+              inputPlaceholder !== "";
+
+            // Check if additional fields are required for select, radio, or checkbox
+            const isAdditionalFieldsValid =
+              inputParameterOption === "select" ||
+              inputParameterOption === "radio" ||
+              inputParameterOption === "checkbox"
+                ? optionLabel !== "" && optionValue !== ""
+                : true; // No additional fields needed for other options
+            if (isCommonFieldsValid && isAdditionalFieldsValid) {
+              addInputButtonAction(
+                buttonLabel,
+                buttonAction,
+                inputName,
+                inputPlaceholder,
+                optionLabel,
+                optionValue
+              );
+            } else {
+              toast.error("Complete Action details");
+            }
+          }}
         />
       </div>
     </div>

@@ -3,10 +3,12 @@ import { ActionGetResponse, LinkedAction } from "@solana/actions";
 import { Field } from "formik";
 import Image from "next/image";
 import React from "react";
+import Button from "./button";
 
 interface Blink {
   values: InitialBlinkValues;
   newValue: ActionGetResponse;
+
   // inputParameterOption: ActionParameterType;
 }
 const BlinkPreview = ({ values, newValue }: Blink) => {
@@ -104,7 +106,11 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
                   <div className="flex gap-3 flex-col">
                     <p className="text-[18px] font-medium">{input?.label}</p>
                     {input?.options.map((option, optIndex) => (
-                      <label key={optIndex} className="flex items-center gap-2">
+                      <label
+                        htmlFor="radio"
+                        key={optIndex}
+                        className="flex items-center gap-2"
+                      >
                         <Field
                           type="radio"
                           name={`${optIndex}`}
@@ -165,11 +171,13 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
               input?.type !== "checkbox" && (
                 <Field
                   as={input?.type === "textarea" ? "textarea" : "input"}
-                  type={input?.type === "textarea" ? undefined : "text"}
+                  type={
+                    input?.type === "textarea" ? undefined : `${input.type}`
+                  }
                   name={`${index}`}
                   placeholder={`${input?.label}*`}
                   required
-                  className="outline-none px-2 py-2 font-medium text-[16px] w-[70%] border"
+                  className="outline-none px-2 py-2 font-medium text-[16px] w-[70%]"
                 />
               )}
 
@@ -177,9 +185,9 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
             {input?.type === "select" && "options" in input && (
               <Field
                 as="select"
-                name="todo"
+                name={`${input.label}${index}`}
                 required
-                className="outline-none px-2 py-2 font-medium text-[16px] w-[70%] border"
+                className="outline-none px-2 py-2 font-medium text-[16px] w-[70%]"
               >
                 {input?.options.map((option, optIndex) => (
                   <option key={optIndex} value={option.value}>
@@ -196,7 +204,7 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
                   <label key={optIndex} className="flex items-center gap-2">
                     <Field
                       type="radio"
-                      name="todo"
+                      name={`${option.label}${optIndex}`}
                       value={option.value}
                       required
                       className="outline-none"
@@ -214,7 +222,7 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
                   <label key={optIndex} className="flex items-center gap-2">
                     <Field
                       type="checkbox"
-                      name="todo"
+                      name={`${option.label}${optIndex}`}
                       value={option.value}
                       required
                       className="outline-none"
@@ -268,6 +276,28 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
     );
   };
 
+  const handlePost = async (blinkValue: ActionGetResponse) => {
+    console.log(blinkValue);
+    try {
+      const response = await fetch("http://localhost:3000/api/blink", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blinkValue),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("POST request successful:", data);
+    } catch (error) {
+      console.error("POST request failed:", error);
+    }
+  };
+
   return (
     <div>
       <p className="text-[25px] font-semibold">Preview</p>
@@ -302,6 +332,13 @@ const BlinkPreview = ({ values, newValue }: Blink) => {
           )}
           {displayAction()}
         </div>
+      </div>
+      <div className="flex justify-end mt-5">
+        <Button
+          value="Submit"
+          onClick={() => handlePost(newValue)}
+          type="submit"
+        />
       </div>
     </div>
   );

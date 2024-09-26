@@ -1,10 +1,11 @@
-import { Field, FormikErrors } from "formik";
-import React, { useState } from "react";
+import { Field, FormikErrors, ErrorMessage } from "formik";
+import React, { useEffect, useState } from "react";
 import ButtonActionUi from "./actionUI/ButtonActionUi";
 import InputButton from "./actionUI/InputButton";
 import { ActionGetResponse } from "@solana/actions";
 import MultiInputUi from "./actionUI/MutipleInputUi";
 import { InitialBlinkValues } from "@/app/page";
+import ErrorMessageUI from "./ErrorMessageUI";
 
 interface BlinkCreationForm {
   values: InitialBlinkValues;
@@ -15,6 +16,8 @@ interface BlinkCreationForm {
     value: string,
     shouldValidate?: boolean
   ) => Promise<void | FormikErrors<InitialBlinkValues>>;
+  dirty: boolean;
+  isValid: boolean;
 }
 
 const BlinkCreationForm = ({
@@ -32,6 +35,16 @@ const BlinkCreationForm = ({
     await setFieldValue("inputPlaceholder", "");
   };
 
+  useEffect(() => {
+    const { label, title, description } = values;
+    setNewValue((prevValue) => ({
+      ...prevValue,
+      label: label,
+      title: title,
+      description: description,
+    }));
+  }, [values, setNewValue]);
+
   return (
     <div className="w-full flex flex-col gap-5">
       <p className="text-[25px] font-semibold">Details</p>
@@ -44,6 +57,7 @@ const BlinkCreationForm = ({
           required
           className="outline-none border rounded-lg px-5 py-3"
         />
+        <ErrorMessage name="title" component={ErrorMessageUI} />
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="description">Description</label>
@@ -54,6 +68,7 @@ const BlinkCreationForm = ({
           className="outline-none border rounded-lg px-5 py-3"
           required
         />
+        <ErrorMessage name="description" component={ErrorMessageUI} />
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="label">Label</label>
@@ -64,6 +79,7 @@ const BlinkCreationForm = ({
           className="outline-none border rounded-lg px-5 py-3"
           required
         />
+        <ErrorMessage name="label" component={ErrorMessageUI} />
       </div>
       <p className="text-[25px] font-semibold">Actions</p>
       <div className="flex justify-between items-center">
@@ -89,6 +105,8 @@ const BlinkCreationForm = ({
           setNewValue={setNewValue}
           newValue={newValue}
           setFieldValue={setFieldValue}
+          // dirty={dirty}
+          // isValid={isValid}
         />
       )}
 
@@ -102,6 +120,8 @@ const BlinkCreationForm = ({
           setNewValue={setNewValue}
           newValue={newValue}
           setFieldValue={setFieldValue}
+          // dirty={dirty}
+          // isValid={isValid}
         />
       )}
     </div>

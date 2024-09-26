@@ -1,8 +1,9 @@
-import { Field } from "formik";
+import { ErrorMessage, Field } from "formik";
 import React from "react";
 import Button from "../button";
 import { ActionGetResponse } from "@solana/actions";
 import { InitialBlinkValues } from "@/app/page";
+import ErrorMessageUI from "../ErrorMessageUI";
 
 interface ButtonAction {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +49,7 @@ const ButtonActionUi = ({ values, setNewValue }: ButtonAction) => {
             placeholder="Enter button label"
             className="outline-none border rounded-lg px-5 py-3 "
           />
+          <ErrorMessage name="buttonLabel" component={ErrorMessageUI} />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="">Button Action</label>
@@ -57,9 +59,11 @@ const ButtonActionUi = ({ values, setNewValue }: ButtonAction) => {
             placeholder="Enter button label"
             className="outline-none border rounded-lg px-5 py-3 "
           />
+          <ErrorMessage name="buttonAction" component={ErrorMessageUI} />
         </div>
         <Button
           value="Add"
+          disabled={values.buttonLabel == "" || values.buttonAction == ""}
           type="button"
           onClick={() =>
             addButtonAction(values.buttonLabel, values.buttonAction)

@@ -1,10 +1,12 @@
 "use client";
 import BlinkCreationForm from "@/components/BlinkCreationForm";
 import BlinkPreview from "@/components/BlinkPreview";
+
 import Navbar from "@/components/navbar";
 import { ActionGetResponse, LinkedAction } from "@solana/actions";
 import { Formik, Form } from "formik";
 import { useState } from "react";
+import * as Yup from "yup";
 // import { useDrag, useDrop } from "react-dnd";
 
 export interface InitialBlinkValues {
@@ -29,103 +31,12 @@ export default function Home() {
     icon: "https://res.cloudinary.com/dukepqryi/image/upload/v1726437261/crowdfunder.jpg",
     label: "",
     links: {
-      // actions: [
-
-      // ] as LinkedAction[],
-      actions: [
-        // {
-        //   label: "Fund 0.1 SOL",
-        //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-        //   parameters: [
-        //     {
-        //       name: "title1",
-        //       label: "Enter title",
-        //       type: "text",
-        //       // type: "checkbox",
-        //       // options: [{ label: "", value: "", selected: false }],
-        //     },
-        //     {
-        //       name: "title2",
-        //       label: "Enter title",
-        //       type: "email",
-        //       max: 1,
-        //     },
-        //     {
-        //       name: "title3",
-        //       label: "Enter title",
-        //       type: "checkbox",
-        //       options: [
-        //         { label: "Option 1", value: "option1", selected: false },
-        //         { label: "Option 2", value: "option2", selected: false },
-        //       ],
-        //     },
-        //     {
-        //       name: "title4",
-        //       label: "Enter title",
-        //       type: "radio",
-        //       options: [
-        //         { label: "Option 1", value: "option1", selected: false },
-        //         { label: "Option 2", value: "option2", selected: false },
-        //       ],
-        //     },
-        //     {
-        //       name: "title5",
-        //       label: "Enter title",
-        //       type: "date",
-        //     },
-        //     {
-        //       name: "title6",
-        //       label: "Enter title",
-        //       type: "datetime-local",
-        //     },
-        //     {
-        //       name: "title7",
-        //       label: "Enter title",
-        //       type: "number",
-        //     },
-        //     {
-        //       name: "title8",
-        //       label: "Enter title",
-        //       type: "select",
-        //       options: [
-        //         { label: "Option 1", value: "option1", selected: false },
-        //         { label: "Option 2", value: "option2", selected: false },
-        //       ],
-        //     },
-        //     {
-        //       name: "title9",
-        //       label: "Enter title",
-        //       type: "textarea",
-        //     },
-        //     {
-        //       name: "title10",
-        //       label: "Enter title",
-        //       type: "url",
-        //     },
-        //   ],
-        // },
-        // {
-        //   label: "Fund 0.1 SOL",
-        //   href: `/api/action?campaign_id=&fund_amount=0.1`,
-        //   parameters: [
-        //     {
-        //       name: "title1",
-        //       label: "Enter title",
-        //       type: "textarea",
-        // options: [
-        //   { label: "Option 1", value: "option1", selected: false },
-        //   { label: "Option 2", value: "option2", selected: false },
-        // ],
-        //       // type: "checkbox",
-        //       // options: [{ label: "", value: "", selected: false }],
-        //     },
-        //   ],
-        // },
-      ] as LinkedAction[],
+      actions: [] as LinkedAction[],
     },
   });
 
   console.log(newValue);
+
   const initialValues: InitialBlinkValues = {
     title: "",
     description: "",
@@ -139,58 +50,51 @@ export default function Home() {
     optionValue: "",
   };
 
-  // const handlePost = async (values: ActionGetResponse) => {
-  //   console.log(values);
-  //   try {
-  //     const response = await fetch("http://localhost:3000/api/blink", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(values),
-  //     });
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+    description: Yup.string().required("Description is required"),
+    label: Yup.string().required("Label is required"),
+    // icon: Yup.string()
+    //   .url("Must be a valid URL")
+    //   .required("Icon URL is required"),
+    buttonLabel: Yup.string().required("Button label is required"),
+    buttonAction: Yup.string()
+      // .url("Must be a valid URL")
+      .required("Button action is required"),
+    inputName: Yup.string().required("Give input a name value"), // Optional string
+    inputPlaceholder: Yup.string().required("Give input a place holder value"), // Optional string
+    optionLabel: Yup.string().required("Option Label is required"), // Optional string
+    optionValue: Yup.string().required("Option Label is required"), // Optional string
+  });
 
-  //     if (!response.ok) {
-  //       throw new Error(`Error: ${response.statusText}`);
-  //     }
-
-  //     const data = await response.json();
-  //     console.log("POST request successful:", data);
-  //   } catch (error) {
-  //     console.error("POST request failed:", error);
-  //   }
-  // };
+  // setNewValue({
+  //   ...newValue,
+  //   title: ''
+  // })
 
   return (
     <div>
       <Navbar />
       <div className="p-10">
         <p className="text-[40px] font-semibold mt-6 mb-10">Create Blink</p>
-        <Formik initialValues={initialValues} onSubmit={() => {}}>
-          {({ values, setFieldValue }) => (
+        <Formik
+          initialValues={initialValues}
+          onSubmit={() => {}}
+          validationSchema={validationSchema}
+        >
+          {({ values, setFieldValue, dirty, isValid }) => (
             <Form>
               <div className="flex justify-between gap-5 ">
-                {/* <div className="w-full"> */}
                 <BlinkCreationForm
                   values={values}
                   newValue={newValue}
                   setNewValue={setNewValue}
                   setFieldValue={setFieldValue}
-                  // setInputParameterOption={setInputParameterOption}
+                  dirty={dirty}
+                  isValid={isValid}
                 />
-                {/* </div> */}
-                <BlinkPreview
-                  values={values}
-                  newValue={newValue}
-                  // inputParameterOption={inputParameterOption}
-                />
+                <BlinkPreview values={values} newValue={newValue} />
               </div>
-              {/* 
-              <Button
-                value="Submit"
-                // onClick={() => handlePost(newValue)}
-                type="submit"
-              /> */}
             </Form>
           )}
         </Formik>

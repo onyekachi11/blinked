@@ -177,10 +177,21 @@ const allBlinks: Blink[] = [
           //     },
           //   ],
           // },
-          {
-            label: "Fund 11 SOL",
-            href: `/api/action?campaign_id=&fund_amount=0.1`,
-          },
+          // {
+          //   label: "Fund 11 SOL",
+          //   href: `/api/action?campaign_id=&fund_amount=0.1`,
+          //   parameters: [
+          //     {
+          //       name: "title8",
+          //       label: "Enter title",
+          //       type: "select",
+          //       options: [
+          //         { label: "ccccc", value: "", selected: false },
+          //         { label: "ccccc", value: "", selected: false },
+          //       ],
+          //     },
+          //   ],
+          // },
         ],
       },
     },

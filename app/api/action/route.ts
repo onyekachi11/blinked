@@ -1,7 +1,7 @@
 import { ActionGetResponse, ACTIONS_CORS_HEADERS } from "@solana/actions";
 
 async function getAction() {
-  const response = await fetch("http://localhost:3000/api/blink?blink_id=3");
+  const response = await fetch("http://localhost:3000/api/blink?blink_id=5");
 
   if (!response.ok) {
     throw new Error(`Error: ${response.statusText}`);
