@@ -1,6 +1,6 @@
 "use client";
 import { Field, FormikErrors, ErrorMessage } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../button";
 import {
   ActionGetResponse,
@@ -38,6 +38,15 @@ const MultiInputUi = ({
   newValue,
   setFieldValue,
 }: InputButtons) => {
+  const {
+    optionLabel,
+    optionValue,
+    // buttonAction,
+    buttonLabel,
+    inputName,
+    inputPlaceholder,
+  } = values;
+
   const [inputParameterOption, setInputParameterOption] =
     useState<ActionParameterType>("text");
   const [inputValue, setInputValue] = useState({
@@ -46,18 +55,61 @@ const MultiInputUi = ({
     parameters: [] as Array<TypedActionParameter>,
   });
 
-  const {
-    optionLabel,
-    optionValue,
-    buttonAction,
-    buttonLabel,
-    inputName,
-    inputPlaceholder,
-  } = values;
+  // import { useEffect, useRef } from "react";
+
+  function generateDynamicUrl(parameters: Array<TypedActionParameter>) {
+    let href = "/api/action?transaction_type=NFT";
+
+    parameters.forEach((param) => {
+      href += `&${param.name}={${param.name}}`;
+    });
+
+    console.log(href); // Check the generated URL
+    return href; // Return the generated URL
+  }
+
+  // Use this function to update the new value
+  function updateHref(newParams: Array<TypedActionParameter>) {
+    const href = generateDynamicUrl(newParams);
+
+    setNewValue((prevValue) => {
+      const firstAction = prevValue.links?.actions?.[0];
+
+      // Check if the href has changed
+      if (firstAction && firstAction.href !== href) {
+        return {
+          ...prevValue,
+          links: {
+            ...prevValue.links,
+            actions:
+              prevValue.links?.actions.map((action, index) => {
+                if (index === 0) {
+                  return {
+                    ...action,
+                    href: href, // Update href if it has changed
+                  };
+                }
+                return action; // Return unchanged action for other indices
+              }) || [],
+          },
+        };
+      }
+
+      return prevValue; // Return the previous state if no changes
+    });
+  }
+
+  // Call updateHref in useEffect
+  useEffect(() => {
+    if (newValue.links?.actions?.[0]?.parameters) {
+      updateHref(newValue.links.actions[0].parameters);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newValue.links?.actions]);
 
   const addInputButtonAction = (
     buttonLabel: string,
-    buttonAction: string,
+    // buttonAction: string,
     inputName: string,
     inputPlaceholder: string,
     optionLabel: string,
@@ -65,7 +117,7 @@ const MultiInputUi = ({
   ) => {
     const value = {
       label: buttonLabel,
-      href: buttonAction,
+      href: "",
       parameters: [
         {
           name: inputName,
@@ -91,6 +143,7 @@ const MultiInputUi = ({
 
     setNewValue((prevValue) => ({
       ...prevValue,
+
       links: {
         ...prevValue.links,
         // actions: [...(prevValue.links?.actions || []), value], // Spread the existing actions and add the new action
@@ -98,9 +151,13 @@ const MultiInputUi = ({
       },
     }));
 
+    // generateDynamicUrl(value.parameters || []);
+
     setInputValue(value);
+
     resetOptionDetails();
   };
+
   console.log(inputValue);
 
   const addNewInputAction = (
@@ -157,6 +214,9 @@ const MultiInputUi = ({
       ...prev,
       parameters: [...(prev.parameters || []), newParam],
     }));
+
+    // generateDynamicUrl([newParam] || []);
+
     resetOptionDetails();
   };
 
@@ -289,7 +349,7 @@ const MultiInputUi = ({
           />
           <ErrorMessage name="buttonLabel" component={ErrorMessageUI} />
         </div>
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <label htmlFor="">Button Action</label>
           <Field
             type="text"
@@ -298,7 +358,7 @@ const MultiInputUi = ({
             className="outline-none border rounded-lg px-5 py-3 "
           />
           <ErrorMessage name="buttonAction" component={ErrorMessageUI} />
-        </div>
+        </div> */}
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
             <p className="font-medium text-[20px]">Input Parameters</p>
@@ -363,7 +423,7 @@ const MultiInputUi = ({
                     onClick={() => {
                       if (
                         buttonLabel !== "" &&
-                        buttonAction !== "" &&
+                        // buttonAction !== "" &&
                         inputName !== "" &&
                         inputPlaceholder !== "" &&
                         optionLabel !== "" &&
@@ -426,7 +486,7 @@ const MultiInputUi = ({
             onClick={() => {
               const isCommonFieldsValid =
                 buttonLabel !== "" &&
-                buttonAction !== "" &&
+                // buttonAction !== "" &&
                 inputName !== "" &&
                 inputPlaceholder !== "";
 
@@ -441,7 +501,7 @@ const MultiInputUi = ({
               if (isCommonFieldsValid && isAdditionalFieldsValid) {
                 addInputButtonAction(
                   buttonLabel,
-                  buttonAction,
+                  // buttonAction,
                   inputName,
                   inputPlaceholder,
                   optionLabel,
@@ -466,7 +526,7 @@ const MultiInputUi = ({
             onClick={() => {
               const isCommonFieldsValid =
                 buttonLabel !== "" &&
-                buttonAction !== "" &&
+                // buttonAction !== "" &&
                 inputName !== "" &&
                 inputPlaceholder !== "";
 

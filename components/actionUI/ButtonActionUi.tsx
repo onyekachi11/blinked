@@ -16,7 +16,7 @@ const ButtonActionUi = ({ values, setNewValue }: ButtonAction) => {
   const addButtonAction = (buttonLabel: string, buttonAction: string) => {
     const value = {
       label: buttonLabel,
-      href: buttonAction,
+      href: `/api/action?transaction_type=NFT&value=${buttonAction}`,
     };
     setNewValue((prevValue) => ({
       ...prevValue,

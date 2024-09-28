@@ -58,7 +58,8 @@ const InputButton = ({
     const value = {
       label: buttonLabel,
       // href: `/api/action?campaign_id=$&fund_amount=0.1`,
-      href: buttonAction,
+      // href: buttonAction,
+      href: `/api/action?transaction_type=NFT&value={${inputName}}`,
       parameters: [
         {
           name: inputName,
@@ -261,7 +262,7 @@ const InputButton = ({
           />
           <ErrorMessage name="buttonLabel" component={ErrorMessageUI} />
         </div>
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <label htmlFor="">Button Action</label>
           <Field
             type="text"
@@ -270,7 +271,7 @@ const InputButton = ({
             className="outline-none border rounded-lg px-5 py-3 "
           />
           <ErrorMessage name="buttonAction" component={ErrorMessageUI} />
-        </div>
+        </div> */}
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
             <p className="font-medium text-[20px]">Input Parameters</p>
@@ -392,7 +393,7 @@ const InputButton = ({
           onClick={() => {
             const isCommonFieldsValid =
               buttonLabel !== "" &&
-              buttonAction !== "" &&
+              // buttonAction !== "" &&
               inputName !== "" &&
               inputPlaceholder !== "";
 
